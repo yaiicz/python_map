@@ -18,6 +18,7 @@ mapa_salud = mapa.merge(salud_mental_porcentajes, on="Comarca")
 fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 mapa_salud.plot(column= "Porcentaje Salud Mental (%)", cmap="Blues", legend=True, ax=ax)
 
+# todo lo del for es para especificar el texto de los % en el mapa, el color de letra, dónde ponerla, etc.
 for idx, row in mapa_salud.iterrows():
 centroid = row["geometry"].centroid
 ax.text(
@@ -30,7 +31,7 @@ fontsize=6, color="grey", ha="center", va="center", weight="bold"
 ax.set_title("% de individuos con problemas de salud mental diagnosticada", fontsize=15)
 ax.axis("off")
 
-# Guardar el mapa como imagen (opcional)
+# Guardar el mapa como imagen
 plt.savefig("mapa_saludcita.png", dpi=300, bbox_inches="tight")
 
 # Mostrar el mapa
