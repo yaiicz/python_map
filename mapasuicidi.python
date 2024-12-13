@@ -1,0 +1,42 @@
+mapa = gpd.read_file("mapa_comarcas_corregido.shp")  # Cambia por tu archivo Shapefile
+
+ # Cargar el archivo CSV de salud mental
+suicidios_comarcas = pd.read_csv("suicidios_comarcas.csv")
+
+ # Asegurarse de que las columnas coincidan
+print(mapa.columns)  # Revisa las columnas del Shapefile
+
+print(suicidios_comarcas.columns)  # Revisa las columnas del CSV
+# Renombrar columnas si es necesario
+mapa = mapa.rename(columns={"nombre_comarca": "Comarca"})  # Cambia según el nombre real en el Shapefile
+suicidios_comarcas = suicidios_comarcas.rename(columns={"Comarca": "Comarca"})  # Asegúrat\e de que coincide
+
+# Unir los datos del CSV al GeoDataFrame del mapa
+mapa_suicidi = mapa.merge(suicidios_porcentajes, on="Comarca")
+
+# Graficar el mapa
+fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+mapa_suicidios.plot(column= "Porcentaje Suicidios (%)", cmap="Greens", legend=True, ax=ax)
+
+for idx, row in mapa_suicidios.iterrows():
+centroid = row["geometry"].centroid
+ax.text(
+centroid.x, centroid.y,
+color = sm.to_rgba(value) # Color del fondo 
+r, g, b, _ = color # RGBA brightness = 0.299 * r + 0.587 * g + 0.114 * b 
+# Seleccionar el color del texto (blanco para fondos oscuros, negro para claros) 
+text_color = "white" if brightness < 0.5 else "black"
+f"{row['Porcentaje Suicidios (%)']:.1f}%",
+fontsize=6, color="black", ha="center", va="center", weight="bold"
+    )
+
+# Personalización
+ax.set_title("% de individuos con pensamientos suicidas recurrentes", fontsize=15)
+ax.axis("off")
+
+# Guardar el mapa como imagen (opcional)
+plt.savefig("mapa_suicididi.png", dpi=300, bbox_inches="tight")
+
+# Mostrar el mapa
+plt.show()
+
